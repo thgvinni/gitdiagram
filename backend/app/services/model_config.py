@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import os
 
-DEFAULT_MODEL = "claude-sonnet-4-20250514"
+DEFAULT_MODEL = "claude-sonnet-4-6"
 
 
 def get_model() -> str:
