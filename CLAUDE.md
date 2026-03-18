@@ -64,7 +64,7 @@ The app supports two generation backends controlled by `NEXT_PUBLIC_USE_LEGACY_B
 Both expose the same SSE streaming API. The frontend (`src/features/diagram/api.ts`) routes to one or the other transparently.
 
 ### 3-Stage LLM Pipeline
-Diagram generation uses three sequential OpenAI streaming calls:
+Diagram generation uses three sequential Claude (Anthropic) streaming calls via Vertex AI:
 1. **Explanation** — understands the repo structure
 2. **Component Mapping** — maps components to file paths (XML tags extracted)
 3. **Mermaid Diagram** — generates Mermaid syntax with click events
@@ -94,7 +94,7 @@ TypeScript uses `~/*` → `./src/*`.
 |---|---|---|
 | Prompts | `src/server/generate/prompts.ts` | `backend/app/prompts.py` |
 | GitHub client | `src/server/generate/github.ts` | `backend/app/services/github_service.py` |
-| OpenAI streaming | `src/server/generate/openai.ts` | `backend/app/services/openai_service.py` |
+| LLM streaming | `src/server/generate/openai.ts` | `backend/app/services/anthropic_service.py` |
 | Mermaid validation | `src/server/generate/mermaid.ts` | `backend/app/services/mermaid_service.py` |
 | Stream endpoint | `src/app/api/generate/stream/` | `backend/app/routers/generate.py` |
 | DB schema | `src/server/db/schema.ts` | — |
@@ -105,6 +105,7 @@ TypeScript uses `~/*` → `./src/*`.
 
 Minimum required (see `.env.example` for full list):
 - `POSTGRES_URL` — Neon serverless Postgres
-- `OPENAI_API_KEY` — used for all generation stages
+- `GOOGLE_CLOUD_PROJECT` — Google Cloud project ID for Vertex AI
+- `GOOGLE_CLOUD_LOCATION` — Google Cloud region (defaults to us-east5)
 - `GITHUB_PAT` — optional but avoids GitHub rate limits
-- `OPENAI_MODEL` — single model for all three pipeline stages
+- `ANTHROPIC_MODEL` — single model for all three pipeline stages
