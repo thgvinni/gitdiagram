@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-DEFAULT_PRICING_MODEL = "claude-sonnet-4-6"
+DEFAULT_PRICING_MODEL = "claude-haiku-4-5"
 
 
 @dataclass(frozen=True)
@@ -16,6 +16,7 @@ MODEL_PRICING: dict[str, ModelPricing] = {
     "claude-sonnet-4-6": ModelPricing(input_per_million_usd=3.0, output_per_million_usd=15.0),
     "claude-opus-4": ModelPricing(input_per_million_usd=15.0, output_per_million_usd=75.0),
     "claude-sonnet-4": ModelPricing(input_per_million_usd=3.0, output_per_million_usd=15.0),
+    "claude-haiku-4-5": ModelPricing(input_per_million_usd=0.80, output_per_million_usd=4.0),
     "claude-haiku-4": ModelPricing(input_per_million_usd=0.80, output_per_million_usd=4.0),
     "claude-3-5-sonnet": ModelPricing(input_per_million_usd=3.0, output_per_million_usd=15.0),
     "claude-3-5-haiku": ModelPricing(input_per_million_usd=0.80, output_per_million_usd=4.0),
