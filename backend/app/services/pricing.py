@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-DEFAULT_PRICING_MODEL = "gpt-5.4-mini"
+DEFAULT_PRICING_MODEL = "claude-sonnet-4"
 
 
 @dataclass(frozen=True)
@@ -12,22 +12,11 @@ class ModelPricing:
 
 
 MODEL_PRICING: dict[str, ModelPricing] = {
-    "gpt-5.4": ModelPricing(input_per_million_usd=2.5, output_per_million_usd=15.0),
-    "gpt-5.4-pro": ModelPricing(input_per_million_usd=30.0, output_per_million_usd=180.0),
-    "gpt-5.4-mini": ModelPricing(input_per_million_usd=0.75, output_per_million_usd=4.5),
-    "gpt-5.4-nano": ModelPricing(input_per_million_usd=0.2, output_per_million_usd=1.25),
-    "gpt-5.2": ModelPricing(input_per_million_usd=1.75, output_per_million_usd=14.0),
-    "gpt-5.2-chat-latest": ModelPricing(
-        input_per_million_usd=1.75,
-        output_per_million_usd=14.0,
-    ),
-    "gpt-5.2-codex": ModelPricing(input_per_million_usd=1.75, output_per_million_usd=14.0),
-    "gpt-5.2-pro": ModelPricing(input_per_million_usd=21.0, output_per_million_usd=168.0),
-    "gpt-5.1": ModelPricing(input_per_million_usd=1.25, output_per_million_usd=10.0),
-    "gpt-5": ModelPricing(input_per_million_usd=1.25, output_per_million_usd=10.0),
-    "gpt-5-mini": ModelPricing(input_per_million_usd=0.25, output_per_million_usd=2.0),
-    "gpt-5-nano": ModelPricing(input_per_million_usd=0.05, output_per_million_usd=0.4),
-    "o4-mini": ModelPricing(input_per_million_usd=1.1, output_per_million_usd=4.4),
+    "claude-opus-4": ModelPricing(input_per_million_usd=15.0, output_per_million_usd=75.0),
+    "claude-sonnet-4": ModelPricing(input_per_million_usd=3.0, output_per_million_usd=15.0),
+    "claude-haiku-4": ModelPricing(input_per_million_usd=0.80, output_per_million_usd=4.0),
+    "claude-3-5-sonnet": ModelPricing(input_per_million_usd=3.0, output_per_million_usd=15.0),
+    "claude-3-5-haiku": ModelPricing(input_per_million_usd=0.80, output_per_million_usd=4.0),
 }
 
 DEFAULT_PRICING = MODEL_PRICING[DEFAULT_PRICING_MODEL]
@@ -36,7 +25,7 @@ DEFAULT_PRICING = MODEL_PRICING[DEFAULT_PRICING_MODEL]
 def _strip_date_snapshot_suffix(model: str) -> str:
     import re
 
-    return re.sub(r"-\d{4}-\d{2}-\d{2}$", "", model, flags=re.IGNORECASE)
+    return re.sub(r"-\d{8}$", "", model, flags=re.IGNORECASE)
 
 
 def resolve_pricing_model(model: str) -> str:
@@ -48,32 +37,16 @@ def resolve_pricing_model(model: str) -> str:
     if without_date in MODEL_PRICING:
         return without_date
 
-    if without_date.startswith("gpt-5.4-pro"):
-        return "gpt-5.4-pro"
-    if without_date.startswith("gpt-5.4-mini"):
-        return "gpt-5.4-mini"
-    if without_date.startswith("gpt-5.4-nano"):
-        return "gpt-5.4-nano"
-    if without_date.startswith("gpt-5.4"):
-        return "gpt-5.4"
-    if without_date.startswith("gpt-5.2-pro"):
-        return "gpt-5.2-pro"
-    if without_date.startswith("gpt-5.2-codex"):
-        return "gpt-5.2-codex"
-    if without_date.startswith("gpt-5.2-chat"):
-        return "gpt-5.2-chat-latest"
-    if without_date.startswith("gpt-5.2"):
-        return "gpt-5.2"
-    if without_date.startswith("gpt-5.1"):
-        return "gpt-5.1"
-    if without_date.startswith("gpt-5-mini"):
-        return "gpt-5-mini"
-    if without_date.startswith("gpt-5-nano"):
-        return "gpt-5-nano"
-    if without_date.startswith("gpt-5"):
-        return "gpt-5"
-    if without_date.startswith("o4-mini"):
-        return "o4-mini"
+    if without_date.startswith("claude-opus-4"):
+        return "claude-opus-4"
+    if without_date.startswith("claude-sonnet-4"):
+        return "claude-sonnet-4"
+    if without_date.startswith("claude-haiku-4"):
+        return "claude-haiku-4"
+    if without_date.startswith("claude-3-5-sonnet"):
+        return "claude-3-5-sonnet"
+    if without_date.startswith("claude-3-5-haiku"):
+        return "claude-3-5-haiku"
 
     return DEFAULT_PRICING_MODEL
 
