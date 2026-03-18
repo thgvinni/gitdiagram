@@ -26,12 +26,12 @@ def test_generate_cost_success(monkeypatch):
             readme="# readme",
         ),
     )
-    monkeypatch.setattr(generate, "get_model", lambda: "gpt-5.4-mini")
+    monkeypatch.setattr(generate, "get_model", lambda: "claude-sonnet-4-20250514")
 
-    async def fake_count_input_tokens(*, model, system_prompt, data, api_key=None, reasoning_effort=None):
+    async def fake_count_input_tokens(*, model, system_prompt, data, api_key=None):
         return 100
 
-    monkeypatch.setattr(generate.openai_service, "count_input_tokens", fake_count_input_tokens)
+    monkeypatch.setattr(generate.anthropic_service, "count_input_tokens", fake_count_input_tokens)
 
     response = client.post(
         "/generate/cost",
@@ -42,8 +42,8 @@ def test_generate_cost_success(monkeypatch):
     data = response.json()
     assert data["ok"] is True
     assert data["cost"].endswith("USD")
-    assert data["model"] == "gpt-5.4-mini"
-    assert data["pricing_model"] == "gpt-5.4-mini"
+    assert data["model"] == "claude-sonnet-4-20250514"
+    assert data["pricing_model"] == "claude-sonnet-4"
     assert "estimated_input_tokens" in data
     assert "estimated_output_tokens" in data
 
@@ -75,12 +75,12 @@ def test_generate_stream_event_order_with_fix_loop(monkeypatch):
             readme="# readme",
         ),
     )
-    monkeypatch.setattr(generate, "get_model", lambda: "gpt-5.4-mini")
+    monkeypatch.setattr(generate, "get_model", lambda: "claude-sonnet-4-20250514")
 
     async def fake_estimate_repo_input_tokens(model, file_tree, readme, api_key=None):
         return 1000
 
-    async def fake_stream_completion(*, model, system_prompt, data, api_key=None, reasoning_effort=None, max_output_tokens=None):
+    async def fake_stream_completion(*, model, system_prompt, data, api_key=None, max_output_tokens=None):
         if "explaining to a principal" in system_prompt:
             yield "<explanation>Repo explanation</explanation>"
             return
@@ -102,7 +102,7 @@ def test_generate_stream_event_order_with_fix_loop(monkeypatch):
     )
 
     monkeypatch.setattr(generate, "_estimate_repo_input_tokens", fake_estimate_repo_input_tokens)
-    monkeypatch.setattr(generate.openai_service, "stream_completion", fake_stream_completion)
+    monkeypatch.setattr(generate.anthropic_service, "stream_completion", fake_stream_completion)
     monkeypatch.setattr(generate, "validate_mermaid_syntax", lambda diagram: next(validation_results))
 
     response = client.post(
