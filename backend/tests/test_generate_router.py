@@ -26,7 +26,7 @@ def test_generate_cost_success(monkeypatch):
             readme="# readme",
         ),
     )
-    monkeypatch.setattr(generate, "get_model", lambda: "claude-sonnet-4-6")
+    monkeypatch.setattr(generate, "get_model", lambda: "claude-haiku-4-5")
 
     async def fake_count_input_tokens(*, model, system_prompt, data, api_key=None):
         return 100
@@ -42,8 +42,8 @@ def test_generate_cost_success(monkeypatch):
     data = response.json()
     assert data["ok"] is True
     assert data["cost"].endswith("USD")
-    assert data["model"] == "claude-sonnet-4-6"
-    assert data["pricing_model"] == "claude-sonnet-4-6"
+    assert data["model"] == "claude-haiku-4-5"
+    assert data["pricing_model"] == "claude-haiku-4-5"
     assert "estimated_input_tokens" in data
     assert "estimated_output_tokens" in data
 
@@ -75,7 +75,7 @@ def test_generate_stream_event_order_with_fix_loop(monkeypatch):
             readme="# readme",
         ),
     )
-    monkeypatch.setattr(generate, "get_model", lambda: "claude-sonnet-4-6")
+    monkeypatch.setattr(generate, "get_model", lambda: "claude-haiku-4-5")
 
     async def fake_estimate_repo_input_tokens(model, file_tree, readme, api_key=None):
         return 1000
